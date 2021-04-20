@@ -1,0 +1,37 @@
+name: LC8_30_16D_STK_1_MixtureModel
+description: This datacube was generated with all available surface reflectance images
+  from LC8_30_16D_STK_1 cube.
+metadata_type: eo
+storage:
+  crs: '+proj=aea +lat_0=-12 +lon_0=-54 +lat_1=-2 +lat_2=-22 +x_0=5000000 +y_0=10000000
+    +ellps=GRS80 +units=m +no_defs '
+  resolution:
+    x: 30
+    y: -30
+metadata:
+  platform:
+    code: LANDSAT-8
+  instrument:
+    name: OLI
+  product_type: datacube-mixture-model
+  format:
+    name: GeoTiff
+measurements:
+- name: GROUND_FRACTION
+  aliases:
+  - ground
+  dtype: float32
+  nodata: -3.4e+38
+  units: m
+- name: VEGETATION_FRACTION
+  aliases:
+  - vegetation
+  dtype: float32
+  nodata: -3.4e+38
+  units: m
+- name: WATER_FRACTION
+  aliases:
+  - water
+  dtype: float32
+  nodata: -3.4e+38
+  units: m

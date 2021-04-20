@@ -1,0 +1,57 @@
+sources:
+  - product: CB4_64_16D_STK_1
+    measurements: [ BAND14, BAND16 ]
+    group_by: solar_day
+    time: [ 2018-01-01, 2019-12-01 ]
+
+date_ranges:
+  start_date: 2018-09-01
+  end_date: 2019-09-01
+  stats_duration: 1y
+  step_size: 1y
+
+location: /data/stats/
+
+storage:
+  driver: GeoTIFF
+
+  crs: +proj=aea +lat_0=-12 +lon_0=-54 +lat_1=-2 +lat_2=-22 +x_0=5000000 +y_0=10000000 +ellps=GRS80 +units=m +no_defs
+  tile_size:
+    x: 100000.0
+    y: 100000.0
+  resolution:
+    x: 64
+    y: -64
+  chunking:
+    x: 256
+    y: 256
+    time: 1
+  dimension_order: [ time, x, y ]
+
+computation:
+  chunking:
+    x: 1000
+    y: 1000
+
+output_products:
+  - name: CB4_64_16D_STK_1_ndwi_median
+    product_type: datacube-metrics
+    statistic: external
+    statistic_args:
+      impl: datacube_classification.operations.metrics.NDWIStatistics
+
+      green_band: "BAND14"
+      nir_band: "BAND16"
+      metric_name: "median"
+
+    output_params:
+      zlib: True
+      fletcher32: True
+    metadata:
+      format:
+        name: GeoTIFF
+      platform:
+        code: CBERS4
+      instrument:
+        name: AWFI
+    file_path_template: 'CB4_64_16D_STK_1/brazil/NDWI/median/{name}_ndvi_{y}_{x}_{epoch_start:%Y-%m-%d}_{epoch_end:%Y-%m-%d}.tif'

@@ -1,0 +1,69 @@
+sources:
+  - product: LC8_30_16D_STK_1
+    measurements: [ band2, band3 ]
+    group_by: solar_day
+    time: [ 2018-01-01, 2020-01-25 ]
+
+date_ranges:
+  start_date: 2018-01-01
+  end_date: 2018-11-17
+  stats_duration: 16d
+  step_size: 16d
+
+location: /data/stats/
+
+storage:
+  driver: GeoTIFF
+
+  crs: +proj=aea +lat_0=-12 +lon_0=-54 +lat_1=-2 +lat_2=-22 +x_0=5000000 +y_0=10000000 +ellps=GRS80 +units=m +no_defs
+  tile_size:
+    x: 100000.0
+    y: 100000.0
+  resolution:
+    x: 64
+    y: -64
+  chunking:
+    x: 256
+    y: 256
+    time: 1
+  dimension_order: [ time, x, y ]
+
+computation:
+  chunking:
+    x: 1000
+    y: 1000
+
+output_products:
+  - name: LC8_30_16D_STK_1_measurements_generator_test
+    product_type: datacube-measurements
+    statistic: external
+    statistic_args:
+      impl: datacube_classification.operations.cube.MeasurementGenerator
+      operators:
+
+        # Multiple indexes can be passed in this list
+        gemi:
+          module: datacube_classification.spectral_index
+          function: pvr
+
+          dtype: 'int16'
+          nodata: -9999
+          units: 'm'
+
+          factor: 10000
+
+          args:
+            red_band: 'band3'
+            green_band: 'band2'
+
+    output_params:
+      zlib: True
+      fletcher32: True
+    metadata:
+      format:
+        name: GeoTIFF
+      platform:
+        code: LANDSAT-8
+      instrument:
+        name: OLI
+    file_path_template: 'LC8_30_16D_STK_1/bahia/spectral_index/{name}_class_{y}_{x}_{epoch_start:%Y-%m-%d}_{epoch_end:%Y-%m-%d}.tif'
